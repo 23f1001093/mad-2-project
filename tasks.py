@@ -1,12 +1,11 @@
-# tasks.py (Additions for scheduled jobs)
 import csv
 import os
 from io import StringIO
-from datetime import datetime, timedelta, date # Import date
+from datetime import datetime, timedelta, date 
 from celery import Celery
 from flask_mail import Mail, Message
-from models import db, User, Quiz, Score # Ensure models are imported
-from app import create_app # Ensure create_app is imported
+from models import db, User, Quiz, Score 
+from app import create_app 
 import os
 import csv
 from io import StringIO
@@ -18,37 +17,27 @@ from flask_mail import Mail, Message
 from models import db, User, Quiz, Score
 from app import create_app
 
-# -------------------------
-# Initialize Flask app
-# -------------------------
+
 flask_app = create_app()
 
-# -------------------------
-# Initialize Celery
-# -------------------------
 celery = Celery(__name__, broker=flask_app.config['CELERY_BROKER_URL'])
 celery.conf.update(flask_app.config)
 
-# -------------------------
-# Initialize Flask-Mail
-# -------------------------
 mail = Mail(flask_app)
-# ... (Existing celery app and mail initialization) ...
+
 
 @celery.task()
 def send_daily_reminders():
     with flask_app.app_context():
-        # Define a threshold for inactivity (e.g., 7 days)
         seven_days_ago = datetime.utcnow() - timedelta(days=7)
 
-        # Find users who haven't attempted a quiz recently
-        # This is a simplified logic, you might want to track last login/activity
+        
         inactive_users = User.query.filter(
             User.role == 'user',
             ~User.scores.any(Score.time_stamp_of_attempt > seven_days_ago) # Users with no score in last 7 days
         ).all()
 
-        # Find new quizzes created recently (e.g., in the last 24 hours)
+    
         recent_quizzes = Quiz.query.filter(
             Quiz.created_at > datetime.utcnow() - timedelta(days=1)
         ).all()
@@ -93,7 +82,7 @@ def generate_monthly_report():
         users = User.query.filter_by(role='user').all()
 
         for user in users:
-            # Get scores for the previous month for this user
+            # Get scores for  previous month for this user
             monthly_scores = Score.query.filter(
                 Score.user_id == user.id,
                 Score.time_stamp_of_attempt >= first_day_of_previous_month,
@@ -109,7 +98,7 @@ def generate_monthly_report():
             total_possible_sum = sum(s.total_possible for s in monthly_scores)
             average_score = (total_scored_sum / total_possible_sum * 100) if total_possible_sum > 0 else 0
 
-            # Generate HTML report (simplified, can be more elaborate)
+            # Generate HTML report
             html_body = f"""
             <html>
             <head>

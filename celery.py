@@ -7,7 +7,7 @@ import csv
 from models import db, User, Quiz, Score
 from app import create_app
 
-# Setup Flask context for Celery
+
 flask_app = create_app()
 celery = Celery(__name__, broker=flask_app.config['CELERY_BROKER_URL'])
 celery.conf.update(flask_app.config)
@@ -58,3 +58,4 @@ def export_scores():
             f.write(output.getvalue())
 
         return filename
+

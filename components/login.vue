@@ -42,8 +42,7 @@ export default {
 
         if (result.success) {
           this.message = 'Login successful!';
-          // Redirect to dashboard or store token
-          // this.$router.push('/dashboard') if using Vue Router
+          
         } else {
           this.message = result.message || 'Login failed.';
         }

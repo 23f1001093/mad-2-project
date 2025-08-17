@@ -54,12 +54,12 @@ const quizId = route.params.quizId;
 
 const quiz = ref({});
 const questions = ref([]);
-const userAnswers = ref({}); // { question_id: selected_option_value }
+const userAnswers = ref({}); 
 const message = ref('');
 const messageType = ref('');
 const isSubmitting = ref(false);
 
-const timeLeft = ref(0); // in seconds
+const timeLeft = ref(0); 
 const timerInterval = ref(null);
 const quizStarted = ref(false);
 
@@ -77,12 +77,12 @@ const fetchQuizData = async () => {
       quiz.value = data;
       questions.value = data.questions;
 
-      // Initialize userAnswers with empty selections
+     
       questions.value.forEach(q => {
         userAnswers.value[q.id] = '';
       });
 
-      // Set time left from quiz duration (e.g., "00:30" -> 30 minutes)
+      
       if (quiz.value.time_duration) {
         const [hours, minutes] = quiz.value.time_duration.split(':').map(Number);
         timeLeft.value = (hours * 3600) + (minutes * 60);
@@ -105,7 +105,7 @@ const startTimer = () => {
       timeLeft.value--;
     } else {
       clearInterval(timerInterval.value);
-      submitQuiz(); // Auto-submit when time runs out
+      submitQuiz(); 
       message.value = 'Time is up! Your quiz has been automatically submitted.';
       messageType.value = 'alert-warning';
     }
@@ -118,9 +118,9 @@ const startQuiz = () => {
 };
 
 const submitQuiz = async () => {
-  if (isSubmitting.value) return; // Prevent double submission
+  if (isSubmitting.value) return;
   isSubmitting.value = true;
-  clearInterval(timerInterval.value); // Stop the timer
+  clearInterval(timerInterval.value); 
 
   message.value = 'Submitting your quiz...';
   messageType.value = 'alert-info';
@@ -137,7 +137,7 @@ const submitQuiz = async () => {
     if (response.ok) {
       message.value = `Quiz submitted successfully! Your score: ${data.score} out of ${data.total_questions}.`;
       messageType.value = 'alert-success';
-      // Redirect to user scores page or a results summary
+     
       router.push({ name: 'UserScores' });
     } else {
       message.value = data.message || 'Failed to submit quiz.';

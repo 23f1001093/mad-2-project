@@ -26,12 +26,12 @@
 import { ref, onMounted } from 'vue';
 import { API_BASE } from '../api';
 
-const props = defineProps(['user']); // User prop from App.vue
+const props = defineProps(['user']); 
 const quizzes = ref([]);
 
 const fetchQuizzes = async () => {
   try {
-    // This is the corrected line. We are now calling the general user endpoint for quizzes.
+    
     const response = await fetch(`${API_BASE}/api/quizzes`, { credentials: 'include' });
     
     if (response.ok) {

@@ -2,7 +2,7 @@
 <script setup>
 import { ref, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
-import NavBar from './components/NavBar.vue'; // Add NavBar import
+import NavBar from './components/NavBar.vue'; 
 
 const router = useRouter();
 const user = ref(null);
@@ -15,14 +15,14 @@ const fetchUser = async () => {
       const userData = await res.json();
       user.value = userData;
       isAuthenticated.value = true;
-      // Optional: Redirect if on login page and already authenticated
+      
       if (router.currentRoute.value.path === '/login' || router.currentRoute.value.path === '/') {
         router.push(user.value.role === 'admin' ? '/admin-dashboard' : '/user-dashboard');
       }
     } else {
       user.value = null;
       isAuthenticated.value = false;
-      // If unauthorized and on a protected route, redirect to login
+      
       if (router.currentRoute.value.meta.requiresAuth && router.currentRoute.value.path !== '/login') {
         router.push('/login');
       }

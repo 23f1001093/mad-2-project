@@ -1,0 +1,32 @@
+Project Report
+* Name: Aditi Prasad
+* Roll no. : 23f1001093
+Project Title
+ QUIZ MASTER
+The project aims to create a comprehensive online portal for managing and taking quizzes. It addresses the need for a system that allows administrators to easily create and manage subjects, chapters, quizzes, and questions, while providing students with a platform to attempt quizzes and view their past scores. The system also solves the challenge of handling long-running tasks, such as generating large data exports and sending scheduled email reminders and reports, by using an asynchronous task queue
+The application follows a client-server architecture. The backend is a RESTful API built with the Flask framework. It manages user authentication, quiz data, and score tracking using an SQLite database with SQLAlchemy as the ORM. The frontend is a single-page application developed with Vue.js, which communicates with the backend API to fetch and submit data.
+A key architectural decision was the integration of Celery, a distributed task queue, with Redis as the message broker. This allows for offloading resource-intensive tasks, such as exporting all scores to a CSV file or sending bulk emails, from the main application thread. The front-end was designed to handle this by implementing a polling mechanism to check the status of these asynchronous jobs, providing a smooth user experience. We also implemented a daily reminder task and a monthly report task using Celery Beat to automate scheduled email notifications.
+
+3. Frameworks and Libraries Used
+Frontend
+* Vue.js: For building a dynamic and responsive user interface.
+* Bootstrap: Used for responsive styling and components to ensure a consistent look and feel.
+* Vue Router: For handling client-side routing within the single-page application.
+Backend
+* Flask: A micro-framework used to create the web server and a RESTful API.
+* SQLAlchemy: The Object-Relational Mapper (ORM) used to interact with the SQLite database.
+* Celery: An asynchronous task queue for handling long-running background tasks, such as sending emails and generating reports.
+* Flask-Mail: A Flask extension for sending emails.
+* Flask-Caching: Used for caching data to improve API response times.
+4. ER Diagram of the Database
+The database schema includes the following tables and relationships:
+* User: Stores user details with a one-to-many relationship with Score.
+* Subject: Stores subject details with a one-to-many relationship with Chapter.
+* Chapter: Stores chapter details with a one-to-many relationship with Quiz. It also has a foreign key to Subject.
+* Quiz: Stores quiz information with a one-to-many relationship with both Question and Score. It has a foreign key to Chapter.
+* Question: Stores quiz questions and options, with a foreign key to Quiz.
+* Score: Stores a user's score on a specific quiz, with foreign keys to both User and Quiz.
+* ExportJob: Stores information about asynchronous export jobs, with a foreign key to User.
+5. API Resource Endpoints
+.
+HTTP MethodAPI EndpointDescriptionPOST/api/loginAuthenticates a user and creates a session.POST/api/logoutClears the user's session.POST/api/registerCreates a new user account.GET/api/quizzesRetrieves a list of all quizzes available for a user.GET/api/quizzes/<int:quiz_id>/attemptRetrieves questions for a specific quiz, for a user to attempt.POST/api/quizzes/<int:quiz_id>/submitSubmits a user's answers for a quiz and saves the score.GET/api/user/scoresRetrieves the current user's score history.POST/api/user/export-scoresTriggers an asynchronous job to export the user's scores to a CSV file.GET/api/jobs/<task_id>Checks the status of an asynchronous job by its ID.GET/api/admin/quizzes(Admin) Retrieves a list of all quizzes.GET/api/admin/subjects(Admin) Retrieves a list of all subjects.POST/api/admin/subjects(Admin) Adds a new subject.PUT/api/admin/subjects/<int:id>(Admin) Updates an existing subject.GET/api/admin/chapters(Admin) Retrieves a list of all chapters.POST/api/admin/quizzes(Admin) Adds a new quiz.POST/api/admin/export-scores(Admin) Triggers an asynchronous job to export all scores to a CSV file.

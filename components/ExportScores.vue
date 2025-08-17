@@ -95,9 +95,7 @@ export default {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           credentials: 'include',
-          // Note: The API call needs to be updated to handle a specific quiz ID if required.
-          // The current `routes.py` `export-scores` endpoint exports all scores, so this code is a placeholder for a future, more specific endpoint.
-          // For now, it will trigger a full export.
+          
         });
 
         if (response.ok) {

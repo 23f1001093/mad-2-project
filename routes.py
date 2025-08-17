@@ -7,9 +7,7 @@ import os
 import csv
 api = Blueprint('api', __name__)
 
-# --- Helper Decorator ---
-# This decorator is for protecting API routes for admins.
-# It checks if the user is authenticated and if their role is 'admin' from the session.
+
 def admin_required(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
@@ -75,12 +73,11 @@ def register():
     db.session.commit()
     return jsonify({'message': 'Registration successful'}), 201
 
-# --- Admin API Routes (Standardized with /admin/) ---
+# --- Admin API Routes
 @api.route('/admin/quizzes', methods=['GET'])
 @admin_required
 def get_admin_quizzes():
     quizzes = Quiz.query.all()
-    # Assuming serialize() method for Quiz returns all necessary details including chapter/subject names
     return jsonify({'quizzes': [q.serialize() for q in quizzes]}), 200
 
 @api.route('/admin/subjects', methods=['GET'])
@@ -174,7 +171,7 @@ def delete_chapter(id):
     return jsonify({'message': 'Chapter deleted'})
 
 
-# --- Quiz Management (Admin) ---
+# --- Quiz Management
 @api.route('/admin/quizzes', methods=['POST'])
 @admin_required
 def add_quiz():
@@ -228,7 +225,7 @@ def get_quiz_details(quiz_id):
     quiz = Quiz.query.get_or_404(quiz_id)
     return jsonify(quiz.serialize()), 200
 
-# --- Question Management (Admin) ---
+# --- Question Management---
 @api.route('/admin/quizzes/<int:quiz_id>/questions', methods=['GET'])
 @admin_required
 def get_quiz_questions(quiz_id):
@@ -293,8 +290,6 @@ def delete_question(question_id):
     return jsonify({'message': 'Question deleted'}), 200
 
 
-# --- User Quiz Attempt and Scoring (User-facing - NO /admin/ prefix) ---
-# THIS IS THE NEWLY ADDED ROUTE TO FIX THE 404 ERROR
 @api.route('/quizzes', methods=['GET'])
 def get_user_quizzes():
     user_id = session.get('user_id')
@@ -304,7 +299,7 @@ def get_user_quizzes():
     quizzes = Quiz.query.all()
     quizzes_data = []
     for quiz in quizzes:
-        # Assuming your Quiz model has relationships to Chapter and Subject
+        
         subject_name = quiz.chapter.subject.name if quiz.chapter and quiz.chapter.subject else "Unknown Subject"
         chapter_name = quiz.chapter.name if quiz.chapter else "Unknown Chapter"
         quizzes_data.append({
@@ -401,7 +396,7 @@ def get_user_scores():
     return jsonify(results), 200
 
 
-# --- Admin: View Quiz Results (Scores for a specific quiz) ---
+# --- View Quiz--
 @api.route('/admin/quizzes/<int:quiz_id>/results', methods=['GET'])
 @admin_required
 def get_quiz_results(quiz_id):
@@ -423,7 +418,7 @@ def get_quiz_results(quiz_id):
     }), 200
 
 
-# --- Search Functionality (Admin) ---
+
 @api.route('/admin/search', methods=['GET'])
 @admin_required
 def admin_search():
@@ -451,7 +446,7 @@ def admin_search():
     return jsonify(results), 200
 
 
-# --- Score Export (Admin) ---
+# --- Score Export--
 @api.route('/admin/export-scores', methods=['POST'])
 @admin_required
 def export_scores():

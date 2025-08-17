@@ -51,7 +51,7 @@ const register = async () => {
     const res = await fetch(`${API_BASE}/api/register`, {
      method: 'POST',
      headers: { 'Content-Type': 'application/json' },
-     credentials: 'include', // <--- THIS LINE MUST BE ADDED HERE
+     credentials: 'include', 
      body: JSON.stringify({
        email: email.value,
        password: password.value,
@@ -65,7 +65,7 @@ const register = async () => {
     if (res.ok) {
       message.value = data.message;
       messageType.value = 'alert-success';
-      // Optionally redirect to login after successful registration
+      
       router.push('/login');
     } else {
       message.value = data.message || 'Registration failed.';

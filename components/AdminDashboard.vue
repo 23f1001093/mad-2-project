@@ -64,7 +64,7 @@
 </template>
 
 <script>
-import { API_BASE } from '../api'; // Import API_BASE
+import { API_BASE } from '../api'; 
 
 export default {
   name: "AdminDashboard",
@@ -83,7 +83,7 @@ export default {
       this.message = ''; // Clear previous messages
       this.messageClass = '';
       try {
-        // This URL is already correct: /api/admin/quizzes
+        
         const response = await fetch(`${API_BASE}/api/admin/quizzes`, { credentials: 'include' });
         const data = await response.json();
         if (response.ok) {
@@ -102,9 +102,9 @@ export default {
     async fetchChaptersAndSubjects() {
         try {
             const [chaptersRes, subjectsRes] = await Promise.all([
-                // CORRECTED: URL to /api/admin/chapters
+                
                 fetch(`${API_BASE}/api/admin/chapters`, { credentials: 'include' }),
-                // CORRECTED: URL to /api/admin/subjects
+                
                 fetch(`${API_BASE}/api/admin/subjects`, { credentials: 'include' })
             ]);
 
@@ -139,14 +139,14 @@ export default {
         return chapter ? chapter.subject_id : null;
     },
     editQuiz(quiz) {
-      this.editingQuiz = { ...quiz }; // Create a copy to edit
+      this.editingQuiz = { ...quiz }; 
     },
     async saveQuizEdit() {
         if (!this.editingQuiz) return;
         this.message = '';
         this.messageClass = '';
         try {
-            // CORRECTED: URL to /api/admin/quizzes/${this.editingQuiz.id}
+            
             const response = await fetch(`${API_BASE}/api/admin/quizzes/${this.editingQuiz.id}`, {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json' },
@@ -156,8 +156,8 @@ export default {
             if (response.ok) {
                 this.message = 'Quiz updated successfully!';
                 this.messageClass = 'alert-success';
-                this.editingQuiz = null; // Close edit form
-                this.fetchQuizzes(); // Refresh list
+                this.editingQuiz = null; 
+                this.fetchQuizzes(); 
             } else {
                 const data = await response.json();
                 this.message = `Failed to update quiz: ${data.message || response.statusText}`;
@@ -172,7 +172,7 @@ export default {
     },
     cancelEdit() {
         this.editingQuiz = null;
-        this.message = ''; // Clear message on cancel
+        this.message = ''; 
         this.messageClass = '';
     },
     async deleteQuiz(quizId) {
@@ -181,7 +181,7 @@ export default {
       this.messageClass = '';
 
       try {
-        // CORRECTED: URL to /api/admin/quizzes/${quizId}
+       
         const response = await fetch(`${API_BASE}/api/admin/quizzes/${quizId}`, {
           method: 'DELETE',
           credentials: 'include'
@@ -190,7 +190,7 @@ export default {
         if (response.ok) {
           this.message = data.message;
           this.messageClass = 'alert-success';
-          this.quizzes = this.quizzes.filter(q => q.id !== quizId); // Optimistically update UI
+          this.quizzes = this.quizzes.filter(q => q.id !== quizId); 
         } else {
           this.message = `Failed to delete quiz: ${data.message || response.statusText}`;
           this.messageClass = 'alert-danger';

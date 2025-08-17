@@ -91,9 +91,9 @@ export default {
     };
   },
   watch: {
-    // Watch for changes in the route parameters
+    
     '$route.params.quizId': {
-      immediate: true, // Fetch data on initial component mount
+      immediate: true, 
       handler(newQuizId) {
         if (newQuizId) {
           this.quizId = newQuizId;

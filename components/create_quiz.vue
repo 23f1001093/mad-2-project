@@ -83,7 +83,7 @@ export default {
         });
         if (response.ok) {
           this.chapters = await response.json();
-          this.selectedChapterId = ''; // Reset chapter selection
+          this.selectedChapterId = ''; 
         } else {
           this.message = 'Failed to fetch chapters.';
           this.messageClass = 'alert-danger';
@@ -118,8 +118,7 @@ export default {
         if (response.ok) {
           this.message = 'Quiz created successfully!';
           this.messageClass = 'alert-success';
-          // Optionally, redirect to the quiz management page
-          // this.$router.push({ name: 'AdminQuizzes' });
+          
         } else {
           this.message = data.message || 'Failed to create quiz.';
           this.messageClass = 'alert-danger';

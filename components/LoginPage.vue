@@ -18,10 +18,10 @@
 <script setup>
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
-import { API_BASE } from '../api'; // Ensure this path is correct relative to LoginPage.vue
+import { API_BASE } from '../api'; 
 
 const router = useRouter();
-const email = ref(''); // Changed to email
+const email = ref(''); 
 const password = ref('');
 const error = ref('');
 
@@ -32,9 +32,9 @@ const login = async () => {
   try {
     const res = await fetch(`${API_BASE}/api/login`, {
       method: 'POST',
-      credentials: 'include', // Important for sessions
+      credentials: 'include', 
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email: email.value, password: password.value }), // Send email
+      body: JSON.stringify({ email: email.value, password: password.value }), 
     });
 
     if (!res.ok) {
@@ -44,8 +44,8 @@ const login = async () => {
     }
 
     const data = await res.json();
-    emit('set-user', { id: data.user_id, role: data.role }); // Pass user data up to App.vue
-    router.push(data.role === 'admin' ? '/admin-dashboard' : '/user-dashboard'); // Redirect based on role
+    emit('set-user', { id: data.user_id, role: data.role }); 
+    router.push(data.role === 'admin' ? '/admin-dashboard' : '/user-dashboard'); 
 
   } catch (err) {
     console.error(err);

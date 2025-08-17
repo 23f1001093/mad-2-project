@@ -33,27 +33,26 @@
 </template>
 
 <script>
-// Define API_BASE here or ensure it's imported from somewhere like `../api.js`
-// For now, let's define it here for clarity:
-const API_BASE = 'http://localhost:5001'; // Make sure this matches your Flask backend URL
+
+const API_BASE = 'http://localhost:5001'; 
 
 export default {
-  name: "RegisterComponent", // Renamed for clarity, if it's not RegisterPage
+  name: "RegisterComponent", 
   data() {
     return {
-      full_name: '', // Changed from 'name' to 'full_name' to match backend
+      full_name: '', 
       email: '',
       password: '',
       confirmPassword: '',
-      qualification: '', // Added, if your backend's register route expects it
-      dob: '',           // Added, if your backend's register route expects it
+      qualification: '', 
+      dob: '',           
       message: '',
-      messageType: '' // For dynamic alert styling (alert-success, alert-danger)
+      messageType: '' 
     };
   },
   methods: {
     async register() {
-      // Clear previous messages
+     
       this.message = '';
       this.messageType = '';
 
@@ -64,32 +63,32 @@ export default {
       }
 
       try {
-        const response = await fetch(`${API_BASE}/api/register`, { // Use API_BASE here
+        const response = await fetch(`${API_BASE}/api/register`, { 
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          credentials: 'include', // <--- CRITICAL: ADDED THIS BACK IN!
+          credentials: 'include', 
           body: JSON.stringify({
-            full_name: this.full_name, // Changed from 'name' to 'full_name'
+            full_name: this.full_name, 
             email: this.email,
             password: this.password,
-            qualification: this.qualification, // Include if backend expects
-            dob: this.dob // Include if backend expects
+            qualification: this.qualification, 
+            dob: this.dob 
           })
         });
 
         const result = await response.json();
 
-        if (response.ok) { // Check response.ok for 2xx status codes (success)
+        if (response.ok) { 
           this.message = result.message || 'Registration successful!';
           this.messageType = 'alert-success';
-          // You'll need Vue Router set up to use this.$router
+          
           if (this.$router) {
-            this.$router.push('/login'); // Redirect to login page
+            this.$router.push('/login'); 
           } else {
             console.warn("Vue Router instance not available for redirection.");
           }
         } else {
-          // If response is not ok, display error message from backend
+          
           this.message = result.message || 'Registration failed.';
           this.messageType = 'alert-danger';
         }

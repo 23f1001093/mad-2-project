@@ -3,15 +3,14 @@ from datetime import datetime
 
 db = SQLAlchemy()
 
-### USER TABLE ###
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    email = db.Column(db.String(150), unique=True, nullable=False)  # Username
-    password = db.Column(db.String(255), nullable=False) # Increased length for scrypt hash
+    email = db.Column(db.String(150), unique=True, nullable=False)  
+    password = db.Column(db.String(255), nullable=False) 
     full_name = db.Column(db.String(100), nullable=False)
     qualification = db.Column(db.String(100))
     dob = db.Column(db.Date)
-    role = db.Column(db.String(20), default='user')  # 'admin' or 'user'
+    role = db.Column(db.String(20), default='user') 
     registered_on = db.Column(db.DateTime, default=datetime.utcnow)
 
     scores = db.relationship('Score', backref='user', lazy=True)
@@ -30,14 +29,13 @@ class User(db.Model):
         return f'<User {self.email} ({self.role})>'
 
 
-### SUBJECT TABLE ###
 class Subject(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), unique=True, nullable=False)
     description = db.Column(db.String(255))
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
-    chapters = db.relationship('Chapter', backref='subject', lazy=True, cascade="all, delete-orphan") # Add cascade for deletion
+    chapters = db.relationship('Chapter', backref='subject', lazy=True, cascade="all, delete-orphan") 
 
     def serialize(self):
         return {
@@ -51,15 +49,13 @@ class Subject(db.Model):
         return f'<Subject {self.name}>'
 
 
-### CHAPTER TABLE ###
 class Chapter(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), nullable=False)
     description = db.Column(db.String(255))
     subject_id = db.Column(db.Integer, db.ForeignKey('subject.id'), nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
-
-    quizzes = db.relationship('Quiz', backref='chapter', lazy=True, cascade="all, delete-orphan") # Add cascade
+    quizzes = db.relationship('Quiz', backref='chapter', lazy=True, cascade="all, delete-orphan") 
 
     def serialize(self):
         return {
@@ -73,23 +69,23 @@ class Chapter(db.Model):
     def __repr__(self):
         return f'<Chapter {self.name} (Subject: {self.subject_id})>'
 
-### QUIZ TABLE ###
+
 class Quiz(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(100), nullable=False) # Changed from title to name for consistency
+    name = db.Column(db.String(100), nullable=False) 
     chapter_id = db.Column(db.Integer, db.ForeignKey('chapter.id'), nullable=False)
     date_of_quiz = db.Column(db.DateTime, default=datetime.utcnow)
-    time_duration = db.Column(db.String(10)) # Storing as "HH:MM" string for simplicity, or could be Integer minutes
+    time_duration = db.Column(db.String(10)) 
     remarks = db.Column(db.Text)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
-    questions = db.relationship('Question', backref='quiz', lazy=True, cascade="all, delete-orphan") # Add cascade
-    scores = db.relationship('Score', backref='quiz', lazy=True, cascade="all, delete-orphan") # Add cascade
+    questions = db.relationship('Question', backref='quiz', lazy=True, cascade="all, delete-orphan") 
+    scores = db.relationship('Score', backref='quiz', lazy=True, cascade="all, delete-orphan") 
 
     def serialize(self):
         return {
             'id': self.id,
-            'name': self.name, # Use 'name' here
+            'name': self.name, 
             'chapter_id': self.chapter_id,
             'date_of_quiz': self.date_of_quiz.isoformat(),
             'time_duration': self.time_duration,
@@ -103,7 +99,7 @@ class Quiz(db.Model):
         return f'<Quiz {self.name} (Chapter: {self.chapter_id})>'
 
 
-### QUESTION TABLE ###
+
 class Question(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     quiz_id = db.Column(db.Integer, db.ForeignKey('quiz.id'), nullable=False)
@@ -112,29 +108,29 @@ class Question(db.Model):
     option2 = db.Column(db.String(255), nullable=False)
     option3 = db.Column(db.String(255), nullable=False)
     option4 = db.Column(db.String(255), nullable=False)
-    correct_option = db.Column(db.String(255), nullable=False) # Stores the correct option's value (e.g., "Option A text")
-
+    correct_option = db.Column(db.String(255), nullable=False) 
+   
     def serialize(self):
         return {
             'id': self.id,
             'quiz_id': self.quiz_id,
             'question_statement': self.question_statement,
             'options': [self.option1, self.option2, self.option3, self.option4],
-            'correct_option': self.correct_option # This should ideally only be sent to admin
+            'correct_option': self.correct_option 
         }
 
     def __repr__(self):
         return f'<Question {self.id} (Quiz: {self.quiz_id})>'
 
 
-### SCORE TABLE ###
+
 class Score(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     quiz_id = db.Column(db.Integer, db.ForeignKey('quiz.id'), nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     time_stamp_of_attempt = db.Column(db.DateTime, default=datetime.utcnow)
     total_scored = db.Column(db.Integer)
-    total_possible = db.Column(db.Integer) # Added field
+    total_possible = db.Column(db.Integer)
 
     def serialize(self):
         return {
@@ -144,8 +140,8 @@ class Score(db.Model):
             'time_stamp_of_attempt': self.time_stamp_of_attempt.isoformat(),
             'total_scored': self.total_scored,
             'total_possible': self.total_possible,
-            'quiz_name': self.quiz.name if self.quiz else None, # Include quiz name
-            'user_email': self.user.email if self.user else None # Include user email
+            'quiz_name': self.quiz.name if self.quiz else None, 
+            'user_email': self.user.email if self.user else None 
         }
 
     def __repr__(self):

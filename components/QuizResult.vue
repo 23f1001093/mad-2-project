@@ -26,7 +26,7 @@ export default {
   },
   created() {
     this.score = this.$route.params.score || 0;
-    this.total = this.$route.params.total || 10; // Adjust if dynamic
+    this.total = this.$route.params.total || 10; 
   }
 };
 </script>

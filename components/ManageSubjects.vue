@@ -34,13 +34,13 @@ const newSubject = ref('');
 const message = ref('');
 const messageClass = ref('');
 
-const API_BASE = 'http://localhost:5001'; // Define API_BASE for consistency
+const API_BASE = 'http://localhost:5001'; 
 
 const loadSubjects = async () => {
-  message.value = ''; // Clear previous messages
+  message.value = ''; 
   messageClass.value = '';
   try {
-    // CORRECTED: URL to /api/admin/subjects
+   
     const res = await fetch(`${API_BASE}/api/admin/subjects`, { credentials: 'include' });
     if (res.ok) {
       subjects.value = await res.json();
@@ -48,7 +48,7 @@ const loadSubjects = async () => {
       const errorData = await res.json().catch(() => ({ message: 'Failed to load subjects.' }));
       message.value = errorData.message || `Error: ${res.status} when loading subjects.`;
       messageClass.value = 'alert-danger';
-      subjects.value = []; // Clear subjects on error
+      subjects.value = [];
     }
   } catch (error) {
     console.error('Network or parsing error:', error);
@@ -59,10 +59,10 @@ const loadSubjects = async () => {
 };
 
 const addSubject = async () => {
-  message.value = ''; // Clear previous messages
+  message.value = ''; 
   messageClass.value = '';
   try {
-    // CORRECTED: URL to /api/admin/subjects
+    
     const res = await fetch(`${API_BASE}/api/admin/subjects`, {
       method: 'POST',
       credentials: 'include',
@@ -87,12 +87,12 @@ const addSubject = async () => {
 };
 
 const editSubject = async (subject) => {
-  message.value = ''; // Clear previous messages
+  message.value = ''; 
   messageClass.value = '';
   const name = prompt('Enter new name:', subject.name);
   if (name && name !== subject.name) {
     try {
-      // CORRECTED: URL to /api/admin/subjects/${subject.id}
+ 
       const res = await fetch(`${API_BASE}/api/admin/subjects/${subject.id}`, {
         method: 'PUT',
         credentials: 'include',
@@ -117,11 +117,11 @@ const editSubject = async (subject) => {
 };
 
 const deleteSubject = async (id) => {
-  message.value = ''; // Clear previous messages
+  message.value = ''; 
   messageClass.value = '';
   if (confirm('Are you sure you want to delete this subject?')) {
     try {
-      // CORRECTED: URL to /api/admin/subjects/${id}
+      
       const res = await fetch(`${API_BASE}/api/admin/subjects/${id}`, {
         method: 'DELETE',
         credentials: 'include',
